@@ -1,15 +1,32 @@
-#[macro_use] extern crate nickel;
+#![feature(plugin, decl_macro)]
+#![plugin(rocket_codegen)]
 
-use nickel::{Nickel, StaticFilesHandler, HttpRouter};
+extern crate rocket;
+
+use std::io;
+use std::path::{Path, PathBuf};
+
+use rocket::response::NamedFile;
+
+#[get("/")]
+fn index() -> io::Result<NamedFile> {
+    NamedFile::open("assets/index.html")
+}
+
+#[get("/<file..>")]
+fn files(file: PathBuf) -> Option<NamedFile> {
+    NamedFile::open(Path::new("assets/").join(file)).ok()
+}
+
+#[get("/api/get/eventName")]
+fn event_name() -> String {
+     format!("SumoBots Central Regional!")
+}
+
+fn rocket() -> rocket::Rocket {
+    rocket::ignite().mount("/", routes![index, files, event_name])
+}
 
 fn main() {
-    let mut server = Nickel::new();
-
-    server.utilize(StaticFilesHandler::new("assets/"));
-    server.get("/api/get/eventName", middleware!("SumoBots Central OH Regional"));
-
-    match server.listen("127.0.0.1:6767"){
-        Ok(_) => println!(""),
-        Err(e) => println!("Error: {}", e)
-    }
+    rocket().launch();
 }
