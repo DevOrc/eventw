@@ -23,10 +23,16 @@ fn event_name() -> String {
      format!("SumoBots Central Regional!")
 }
 
+#[post("/api/post/createTeam/<name>/<number>")]
+fn create_team(name: String, number: u32) -> String{
+    println!("Team Created! {}: {}", name, number);
+    format!("{}: {}", name, number)
+}
+
 fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![index, files, event_name])
+    rocket::ignite().mount("/", routes![index, files, event_name, create_team])
 }
 
 fn main() {
-    rocket().launch();
+    rocket().launch(); 
 }
