@@ -24,10 +24,20 @@ impl Event{
     }
 
     ///Adds a team to the event
-    pub fn add_team(&mut self, team: Team){
+    pub fn add_team(&mut self, team: Team) -> String{
+        
+        //Check if team number is valid
+        for t in &self.teams{
+            if t.number == team.number{
+                println!("Two Teams with duplicate number! Team 1: {:?}, Team 2: {:?}", t, team);
+                return format!("Error: Team {} already has number {}", t.name, t.number);
+            }
+        }
+
         self.teams.push(team);
 
-        println!("Teams: {:?}", self.teams);
+        println!("Added Team: {:?}", self.teams);
+        return "Team added!".to_string();
     }
 
 }
@@ -65,13 +75,13 @@ fn get_teams(event_mutex: State<Mutex<Event>>) -> String{
 }
 
 #[post("/createTeam/<name>/<number>")]
-fn create_team(name: String, number: u32, event_mutex: State<Mutex<Event>>){
+fn create_team(name: String, number: u32, event_mutex: State<Mutex<Event>>) -> String{
     let team_created = Team {name: name, number: number};
     println!("Created Team: {:?}", team_created);
 
     let mut event = event_mutex.lock().unwrap();
 
-    event.add_team(team_created);
+    event.add_team(team_created)
 }
 
 fn main() {

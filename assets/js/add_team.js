@@ -17,8 +17,10 @@ function onAddTeam(){
 function onPostRecieved(response){
     var statusBox = document.getElementById("statusBox");
     
+    console.log("added team: " + response.responseText);
+
     if(response.status == 200){
-        statusBox.innerHTML = "Created Team!";
+        statusBox.innerHTML = response.responseText;
         statusBox.style = "color:green;"
     }else{
         statusBox.style = "color:red;"
