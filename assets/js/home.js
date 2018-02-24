@@ -15,7 +15,7 @@ function refreshTeamTable() {
 function loadTeamTable(responseText) {
     var table = document.getElementById("team-table");
     var html = [];
-    html.push("<tr><th>Team Name</th> <th>Team Number</th></tr>");
+    html.push("<tr><th>Team Name</th> <th>Team Number</th><th>Options</th></tr>");
 
     var lines = responseText.split('\n');
 
@@ -31,7 +31,11 @@ function loadTeamTable(responseText) {
                 teamName,
                 "</td><td>",
                 teamNumber,
-                "</td></tr>"
+                "</td><td><center>",
+                "<input type=\"submit\" value=\"Options\" onclick=\"openTeamOptions(",
+                teamNumber,
+                ")\">",
+                "</center></td></tr>"
             );
         }
     }
@@ -50,4 +54,8 @@ function httpGetAsync(theUrl, callback) {
 
 function addTeam() {
     window.open("add_teams.html", "MsgWindow", "width=500,height=400");
+}
+
+function openTeamOptions(number){
+    window.open("team_options.html?number=" + number, "MsgWindow", "width=500,height=400");
 }
