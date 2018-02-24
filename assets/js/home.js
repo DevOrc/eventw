@@ -4,6 +4,39 @@ function init() {
         var eventNameLabel = document.getElementById("eventName");
         eventNameLabel.innerHTML = "Event Wizard <br />" + responseText;
     });
+
+    httpGetAsync("/api/get/teams", loadTeamTable);
+}
+
+function refreshTeamTable() {
+    httpGetAsync("/api/get/teams", loadTeamTable);
+}
+
+function loadTeamTable(responseText) {
+    var table = document.getElementById("team-table");
+    var html = [];
+    html.push("<tr><th>Team Name</th> <th>Team Number</th></tr>");
+
+    var lines = responseText.split('\n');
+
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+
+        if (line) {
+            var teamName = line.split(" ")[0];
+            var teamNumber = line.split(" ")[1];
+
+            html.push(
+                "<tr><td>",
+                teamName,
+                "</td><td>",
+                teamNumber,
+                "</td></tr>"
+            );
+        }
+    }
+    console.log("HTML:\n" + html.join(""));
+    table.innerHTML = html.join("");
 }
 
 function httpGetAsync(theUrl, callback) {

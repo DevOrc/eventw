@@ -48,26 +48,39 @@ fn files(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(Path::new("assets/").join(file)).ok()
 }
 
-#[get("/api/get/eventName")]
+#[get("/eventName")]
 fn event_name() -> String {
      format!("SumoBots Central Regional!")
 }
 
-#[post("/api/post/createTeam/<name>/<number>")]
-fn create_team(name: String, number: u32, event: State<Mutex<Event>>){
+#[get("/teams")]
+fn get_teams(event_mutex: State<Mutex<Event>>) -> String{
+    let event = event_mutex.lock().unwrap();
+    let mut response = String::new();
+
+    for team in &event.teams {
+        response = format!("{}{} {}\n", response, team.name, team.number);
+    }
+    response
+}
+
+#[post("/createTeam/<name>/<number>")]
+fn create_team(name: String, number: u32, event_mutex: State<Mutex<Event>>){
     let team_created = Team {name: name, number: number};
     println!("Created Team: {:?}", team_created);
 
-    let mut event_lock = event.lock().unwrap();
+    let mut event = event_mutex.lock().unwrap();
 
-    event_lock.add_team(team_created);
+    event.add_team(team_created);
 }
 
 fn main() {
     let event: Mutex<Event> = Mutex::new(Event::new());
 
     rocket::ignite()
-        .mount("/", routes![index, files, event_name, create_team])
+        .mount("/api/get/", routes![get_teams, event_name])
+        .mount("/api/post/", routes![create_team])
+        .mount("/", routes![files, index])
         .manage(event)
         .launch();
 }

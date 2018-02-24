@@ -38,3 +38,15 @@ li a:hover:not(.active) {
 .active {
     background-color: rgb(0, 46, 133);
 }
+
+th, td{
+    color:white;
+    font-size: 15pt;
+}
+
+table, th, td {
+    border: 1px solid rgb(255, 255, 255);
+    background: rgb(52, 122, 226);
+    border-collapse: collapse;
+    line-height:35px;
+}
