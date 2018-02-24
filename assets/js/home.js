@@ -35,7 +35,6 @@ function loadTeamTable(responseText) {
             );
         }
     }
-    console.log("HTML:\n" + html.join(""));
     table.innerHTML = html.join("");
 }
 
