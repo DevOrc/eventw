@@ -17,6 +17,5 @@ function httpGetAsync(theUrl, callback) {
 }
 
 function addTeam() {
-    console.log("Test");
-    var myWindow = window.open("add_teams.html", "MsgWindow", "width=500,height=400");
+    window.open("add_teams.html", "MsgWindow", "width=500,height=400");
 }

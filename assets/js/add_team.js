@@ -18,7 +18,7 @@ function onPostRecieved(response){
     var statusBox = document.getElementById("statusBox");
     
     if(response.status == 200){
-        statusBox.innerHTML = "Created Team, " + response.responseText;
+        statusBox.innerHTML = "Created Team!";
         statusBox.style = "color:green;"
     }else{
         statusBox.style = "color:red;"
