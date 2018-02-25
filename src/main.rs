@@ -25,7 +25,10 @@ impl Event{
 
     ///Adds a team to the event
     pub fn add_team(&mut self, team: Team) -> String{
-        
+        if team.name.contains(","){
+            return "Commas are not allowed in team names!".to_string();
+        }
+
         //Check if team number is valid
         for t in &self.teams{
             if t.number == team.number{
@@ -99,7 +102,7 @@ fn get_teams(event_mutex: State<Mutex<Event>>) -> String{
     let mut response = String::new();
 
     for team in &event.teams {
-        response = format!("{}{} {}\n", response, team.name, team.number);
+        response = format!("{}{},{}\n", response, team.name, team.number);
     }
     response
 }

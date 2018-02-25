@@ -23,8 +23,8 @@ function loadTeamTable(responseText) {
         var line = lines[i];
 
         if (line) {
-            var teamName = line.split(" ")[0];
-            var teamNumber = line.split(" ")[1];
+            var teamName = line.split(",")[0];
+            var teamNumber = line.split(",")[1];
 
             html.push(
                 "<tr><td>",
