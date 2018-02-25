@@ -8,6 +8,7 @@ use std::path::{Path, PathBuf};
 
 use rocket::response::NamedFile;
 use rocket::request::State;
+use std::cmp::Ordering;
 use std::sync::{Mutex};
 
 struct Event{
@@ -38,8 +39,8 @@ impl Event{
         }
 
         self.teams.push(team);
+        self.sort_teams();
 
-        println!("Added Team: {:?}", self.teams);
         return "Team added!".to_string();
     }
 
@@ -61,12 +62,27 @@ impl Event{
         return "Team Not Found!".to_string();
     }
 
+    fn sort_teams(&mut self){
+        self.teams.sort_by(|a, b| a.cmp(b));
+    }
+
 }
 
 #[derive(Debug, Clone)]
 struct Team{
     name: String, 
     number: u32
+}
+
+impl Team{
+     fn cmp(&self, b: &Team) -> Ordering{
+         if b.number > self.number{
+             return Ordering::Less;
+         }else if b.number < self.number{
+             return Ordering::Greater;
+         }
+         return Ordering::Equal;
+    }
 }
 
 #[get("/")]
@@ -126,6 +142,14 @@ fn create_team(name: String, number: u32, event_mutex: State<Mutex<Event>>) -> S
 
 fn main() {
     let event: Mutex<Event> = Mutex::new(Event::new());
+
+    for i in 1..40{
+        let mut e = event.lock().unwrap();
+
+        let num = i * 5;
+        let name = format!("TestTeam {}", num);
+        e.add_team(Team{number: num, name: name});
+    }
 
     rocket::ignite()
         .mount("/api/get/", routes![get_teams, event_name, get_name_from_num])
