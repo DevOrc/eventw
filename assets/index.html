@@ -8,7 +8,7 @@
     <script type="text/javascript" src="js/home.js"></script>
 </head>
 
-<body onload="init()">
+<body onload="init()" id="body">
     <ul>
         <li>
             <a class="active">Home</a>
@@ -47,6 +47,18 @@
         </div>
 
     </div>
+
+    <ul class="toolbar">
+        <li>
+            <a>Save Data</a>
+        </li>
+        <li>
+            <a> Load Data</a>
+        </li>
+        <li>
+            <a onClick="shutdownServer();">Shutdown Server</a>
+        </li>
+    </ul>
 </body>
 
 </html>

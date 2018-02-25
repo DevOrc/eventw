@@ -56,6 +56,16 @@ function addTeam() {
     window.open("add_teams.html", "MsgWindow", "width=500,height=400");
 }
 
+function shutdownServer(){
+    //Send request
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "api/post/shutdown", true); // true for asynchronous 
+    xmlHttp.send(null);
+
+    document.getElementById("body").innerHTML = "<h2 style=\"color:white\">Server Shutdown!</h2>";
+    document.getElementById("body").style = "margin:20px;";
+}
+
 function openTeamOptions(number){
     window.open("team_options.html?number=" + number, "MsgWindow", "width=500,height=400");
 }

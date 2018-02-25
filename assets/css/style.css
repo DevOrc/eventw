@@ -50,3 +50,16 @@ table, th, td {
     border-collapse: collapse;
     line-height:35px;
 }
+
+.toolbar{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: gray;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    line-height: 5px;
+    height: 30px;
+}

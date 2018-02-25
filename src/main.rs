@@ -140,6 +140,11 @@ fn create_team(name: String, number: u32, event_mutex: State<Mutex<Event>>) -> S
     event.add_team(team_created)
 }
 
+#[post("/shutdown")]
+fn shutdown(){
+    ::std::process::exit(0);
+}
+
 fn main() {
     let event: Mutex<Event> = Mutex::new(Event::new());
 
@@ -153,7 +158,7 @@ fn main() {
 
     rocket::ignite()
         .mount("/api/get/", routes![get_teams, event_name, get_name_from_num])
-        .mount("/api/post/", routes![create_team])
+        .mount("/api/post/", routes![create_team, shutdown])
         .mount("/api/delete/", routes![delete_team])
         .mount("/", routes![files, index])
         .manage(event)
