@@ -69,3 +69,9 @@ function shutdownServer(){
 function openTeamOptions(number){
     window.open("team_options.html?number=" + number, "MsgWindow", "width=500,height=400");
 }
+
+function saveData(){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "api/post/save", true); // true for asynchronous 
+    xmlHttp.send(null);
+}

@@ -16,5 +16,5 @@ pub fn get_file(name: String) -> PathBuf{
     let mut path_buf = get_dir();
     path_buf.push(name);
 
-    path_buf
+    path_buf.with_extension("txt")
 }

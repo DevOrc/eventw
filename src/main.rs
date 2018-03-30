@@ -12,13 +12,13 @@ use std::cmp::Ordering;
 use std::sync::{Mutex};
 
 mod util;
+mod data;
 
-struct Event{
+pub struct Event{
     teams: Vec<Team>
 }
 
 impl Event{
-
     ///Creates a new event
     pub fn new() -> Event{
         let vec: Vec<Team> = Vec::new();
@@ -68,10 +68,14 @@ impl Event{
         self.teams.sort_by(|a, b| a.cmp(b));
     }
 
+    fn save_data(&self){
+        data::save_event(self);
+    }
+
 }
 
 #[derive(Debug, Clone)]
-struct Team{
+pub struct Team{
     name: String, 
     number: u32
 }
@@ -147,6 +151,15 @@ fn shutdown(){
     ::std::process::exit(0);
 }
 
+#[post("/save")]
+fn save(event_mutex: State<Mutex<Event>>){
+    println!("Saving Data!");
+
+    let event = event_mutex.lock().unwrap();
+
+    event.save_data();
+}
+
 fn main() {
     println!("Save Directory: {:?}", util::get_file("sumo_regional".to_string()));
 
@@ -162,7 +175,7 @@ fn main() {
 
     rocket::ignite()
         .mount("/api/get/", routes![get_teams, event_name, get_name_from_num])
-        .mount("/api/post/", routes![create_team, shutdown])
+        .mount("/api/post/", routes![create_team, shutdown, save])
         .mount("/api/delete/", routes![delete_team])
         .mount("/", routes![files, index])
         .manage(event)
