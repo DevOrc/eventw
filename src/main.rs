@@ -11,6 +11,8 @@ use rocket::request::State;
 use std::cmp::Ordering;
 use std::sync::{Mutex};
 
+mod util;
+
 struct Event{
     teams: Vec<Team>
 }
@@ -146,6 +148,8 @@ fn shutdown(){
 }
 
 fn main() {
+    println!("Save Directory: {:?}", util::get_file("sumo_regional".to_string()));
+
     let event: Mutex<Event> = Mutex::new(Event::new());
 
     for i in 1..40{
