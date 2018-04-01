@@ -75,3 +75,9 @@ function saveData(){
     xmlHttp.open("POST", "api/post/save", true); // true for asynchronous 
     xmlHttp.send(null);
 }
+
+function loadData(){
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "api/post/load", true); // true for asynchronous 
+    xmlHttp.send(null);
+}

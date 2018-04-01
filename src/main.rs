@@ -72,6 +72,11 @@ impl Event{
         data::save_event(self);
     }
 
+    fn reload_data(&mut self){
+        self.teams.clear();
+        data::load_teams(self);
+    }
+
 }
 
 #[derive(Debug, Clone)]
@@ -160,22 +165,24 @@ fn save(event_mutex: State<Mutex<Event>>){
     event.save_data();
 }
 
+#[post("/load")]
+fn load(event_mutex: State<Mutex<Event>>){
+    println!("Loading Data!");
+
+    let mut event = event_mutex.lock().unwrap();
+
+    event.reload_data();
+}
+
+
 fn main() {
     println!("Save Directory: {:?}", util::get_file("sumo_regional".to_string()));
 
-    let event: Mutex<Event> = Mutex::new(Event::new());
-
-    for i in 1..40{
-        let mut e = event.lock().unwrap();
-
-        let num = i * 5;
-        let name = format!("TestTeam {}", num);
-        e.add_team(Team{number: num, name: name});
-    }
+    let event: Mutex<Event> = Mutex::new(data::load_event());
 
     rocket::ignite()
         .mount("/api/get/", routes![get_teams, event_name, get_name_from_num])
-        .mount("/api/post/", routes![create_team, shutdown, save])
+        .mount("/api/post/", routes![create_team, shutdown, save, load])
         .mount("/api/delete/", routes![delete_team])
         .mount("/", routes![files, index])
         .manage(event)
