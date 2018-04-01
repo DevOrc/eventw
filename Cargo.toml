@@ -3,6 +3,10 @@ name = "eventw"
 version = "0.1.0"
 authors = ["Noah Charlton <ncharlton002@gmail.com>"]
 
+[[bin]]
+name = "eventw"
+doc = false
+
 [dependencies]
 rocket = "0.3.6"
 rocket_codegen = "0.3.6"
