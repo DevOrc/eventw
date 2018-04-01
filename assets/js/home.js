@@ -6,6 +6,11 @@ function init() {
     });
 
     httpGetAsync("/api/get/teams", loadTeamTable);
+    httpGetAsync("/api/get/version", loadVersion);
+}
+
+function loadVersion(responseText){
+    document.getElementById("version-textbox").innerHTML = "Version: " + responseText;
 }
 
 function refreshTeamTable() {

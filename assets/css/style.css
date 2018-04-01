@@ -31,6 +31,14 @@ li a {
     text-decoration: none;
 }
 
+li p{
+    height: 70px;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+}
+
 li a:hover:not(.active) {
     background-color: rgb(27, 82, 185);
 }

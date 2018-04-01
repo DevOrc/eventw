@@ -14,6 +14,8 @@ use std::sync::{Mutex};
 mod util;
 mod data;
 
+const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
 pub struct Event{
     teams: Vec<Team>
 }
@@ -134,6 +136,12 @@ fn get_teams(event_mutex: State<Mutex<Event>>) -> String{
     response
 }
 
+#[get("/version")]
+fn get_version() -> &'static str{
+    VERSION
+}
+
+
 #[delete("/team/<number>")]
 fn delete_team( number: u32, event_mutex: State<Mutex<Event>>) -> String{
     let mut event = event_mutex.lock().unwrap();
@@ -174,14 +182,13 @@ fn load(event_mutex: State<Mutex<Event>>){
     event.reload_data();
 }
 
-
 fn main() {
     println!("Save Directory: {:?}", util::get_file("sumo_regional".to_string()));
 
     let event: Mutex<Event> = Mutex::new(data::load_event());
 
     rocket::ignite()
-        .mount("/api/get/", routes![get_teams, event_name, get_name_from_num])
+        .mount("/api/get/", routes![get_teams, event_name, get_name_from_num, get_version])
         .mount("/api/post/", routes![create_team, shutdown, save, load])
         .mount("/api/delete/", routes![delete_team])
         .mount("/", routes![files, index])
