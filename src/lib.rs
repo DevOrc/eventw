@@ -11,21 +11,35 @@ use rocket::request::State;
 use std::cmp::Ordering;
 use std::sync::{Mutex};
 
-mod util;
-mod data;
+pub mod util;
+pub mod data;
 
-const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+pub const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+
+pub struct Config{
+    name: String,
+    path: PathBuf
+}
+
+impl Config{
+    ///Creates a new event
+    pub fn new(name: String, path: PathBuf) -> Config{
+
+        Config {name, path}
+    }
+}
 
 pub struct Event{
-    teams: Vec<Team>
+    teams: Vec<Team>,
+    config: Config
 }
 
 impl Event{
     ///Creates a new event
-    pub fn new() -> Event{
+    pub fn new(config: Config) -> Event{
         let vec: Vec<Team> = Vec::new();
 
-        Event {teams: vec}
+        Event {teams: vec, config}
     }
 
     ///Adds a team to the event
@@ -109,8 +123,10 @@ fn files(file: PathBuf) -> Option<NamedFile> {
 }
 
 #[get("/eventName")]
-fn event_name() -> String {
-     format!("SumoBots Central Regional!")
+fn event_name(event_mutex: State<Mutex<Event>>) -> String {
+    let event = event_mutex.lock().unwrap();
+    
+    format!("Event: {}", event.config.name)
 }
 
 #[get("/teamName/<number>")]
@@ -182,16 +198,17 @@ fn load(event_mutex: State<Mutex<Event>>){
     event.reload_data();
 }
 
-pub fn run() {
-    println!("Save Directory: {:?}", util::get_file("sumo_regional".to_string()));
+pub fn run(config: Config) {
+    let mut event = Event::new(config);
+    data::load_event(&mut event);
 
-    let event: Mutex<Event> = Mutex::new(data::load_event());
+    let event_mutex: Mutex<Event> = Mutex::new(event);
 
     rocket::ignite()
         .mount("/api/get/", routes![get_teams, event_name, get_name_from_num, get_version])
         .mount("/api/post/", routes![create_team, shutdown, save, load])
         .mount("/api/delete/", routes![delete_team])
         .mount("/", routes![files, index])
-        .manage(event)
+        .manage(event_mutex)
         .launch();
 }

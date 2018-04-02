@@ -2,7 +2,7 @@
 function init() {
     httpGetAsync("/api/get/eventName", function (responseText) {
         var eventNameLabel = document.getElementById("eventName");
-        eventNameLabel.innerHTML = "Event Wizard <br />" + responseText;
+        eventNameLabel.innerHTML = "Event Wizard<br />" + responseText;
     });
 
     httpGetAsync("/api/get/teams", loadTeamTable);

@@ -6,7 +6,7 @@ use super::util;
 use std::fs::File;
 
 pub fn save_event(event: &Event){
-    let path = util::get_file("sumo_regional".to_string());
+    let path = &event.config.path;
 
     let mut file = File::create(&path).unwrap_or_else(|e|{
         panic!("I/O Error! Could't load save file: {}", e);
@@ -19,16 +19,13 @@ pub fn save_event(event: &Event){
     }
 }
 
-pub fn load_event() -> Event{
-    let mut event = Event::new();
-    load_teams(&mut event);
-
-    event
+pub fn load_event(event: &mut Event){
+    load_teams(event);
 }
 
 pub fn load_teams(event: &mut Event){
-    let path = util::get_file("sumo_regional".to_string());
-    let file = File::open(&path).unwrap_or_else(|e|{
+    let file = File::open(&event.config.path).unwrap_or_else(|e|{
+        println!("Are you missing your save file?");
         panic!("I/O Error! Could't load save file: {}", e);
     });
 
